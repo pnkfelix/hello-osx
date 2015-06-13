@@ -1,6 +1,9 @@
 target
 Cargo.lock
 
+# ignore Emacs temp files
+*~
+
 # ignore the stamp that tango uses as consistency check for timestamp
 # comparisons
 tango.stamp
