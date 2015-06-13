@@ -1,2 +1,6 @@
 target
 Cargo.lock
+
+# ignore the stamp that tango uses as consistency check for timestamp
+# comparisons
+tango.stamp
