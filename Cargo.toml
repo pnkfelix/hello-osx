@@ -12,3 +12,4 @@ git = "https://github.com/servo/cocoa-rs"
 
 [[bin]]
 name = "hello-osx"
+path = "src/bin/hello-osx.rs"
