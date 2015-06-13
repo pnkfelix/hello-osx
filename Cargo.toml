@@ -1,0 +1,14 @@
+[package]
+name = "hello-osx"
+version = "0.1.0"
+authors = ["Felix S. Klock II <pnkfelix@pnkfx.org>"]
+
+build = "tango-build.rs"
+[build-dependencies.tango]
+git = "https://github.com/pnkfelix/tango"
+
+[dependencies.cocoa]
+git = "https://github.com/servo/cocoa-rs"
+
+[[bin]]
+name = "hello-osx"
