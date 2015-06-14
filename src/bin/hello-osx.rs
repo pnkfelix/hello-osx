@@ -60,7 +60,7 @@ extern crate objc;
 //@ `let _s = DropLoud("hi")` prints `make DropLoud("hi")` when it is
 //@ first evaluated, and then print `drop DropLoud("hi")` when we hit the
 //@ end of the scope for the binding `_s`.
-//@        
+
 use std::convert::{Into};
 use std::borrow::{Cow};
 
@@ -77,7 +77,7 @@ impl Drop for DropLoud {
         println!("drop DropLoud({})", self.s);
     }
 }
-//@      
+
 //@ Now, we are going to have all of our code inside of one giant `unsafe` block
 //@ within `fn main`.  (Yes, I know its evil of me to write a code
 //@ fragment where the parentheses don't match up.  Maybe I'll fix that
