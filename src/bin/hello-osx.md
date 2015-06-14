@@ -23,20 +23,43 @@ use cocoa::base::{self, selector, nil, YES, NO};
 
 use cocoa::foundation::{self, NSString};
 use cocoa::appkit;
+```
 
-// These are traits that must be pulled into scope in order for their
-// methods to be visible.
+There are also traits that must be pulled into scope in order for
+their methods to be visible. Usually one folds these imports into
+the name imports above, but I want to continue using prefixes
+when I reference names explicitly below, so I instead rename each
+trait that I import.
+
+(Idea: `use path as _;` for importing a traits methods without adding
+it to the namespace.)
+
+```rust
 use cocoa::foundation::NSAutoreleasePool as NSAutoreleasePoolTrait;
 use cocoa::foundation::NSProcessInfo as NSProcessInfoTrait;
 use cocoa::appkit::NSApplication as NSApplicationTrait;
 use cocoa::appkit::NSMenu as NSMenuTrait;
 use cocoa::appkit::NSMenuItem as NSMenuItemTrait;
 use cocoa::appkit::NSWindow as NSWindowTrait;
+```
 
+The original hello world demo managed to avoid doing any objective-c
+style message sends itself, but I am not so sure I will be so lucky.
+Let us import the macro to make that easy.
+
+```rust
+#[macro_use]
+extern crate objc;
+```
+
+Okay, now we can jump into the code!
+
+
+```rust
 fn main() {
+    let _start_main = DropLoud("start_main");
     unsafe {
         let _pool = foundation::NSAutoreleasePool::new(nil);
-
         let app = appkit::NSApp();
         app.setActivationPolicy_(appkit::NSApplicationActivationPolicyRegular);
 
@@ -51,7 +74,10 @@ fn main() {
         let quit_title = quit_prefix.stringByAppendingString_(
             foundation::NSProcessInfo::processInfo(nil).processName()
                 );
-        let quit_action = selector("terminate:");
+
+        // let quit_action = selector("terminate:");
+        let quit_action = selector("stop:");
+
         let quit_key = NSString::alloc(nil).init_str("q");
         let quit_item = appkit::NSMenuItem::alloc(nil).initWithTitle_action_keyEquivalent_(
             quit_title,
@@ -75,9 +101,29 @@ fn main() {
         window.setTitle_(title);
         window.makeKeyAndOrderFront_(nil);
 
+        println!("about to activate");
         app.activateIgnoringOtherApps_(YES);
+        println!("about to run");
+        let app_run = DropLoud(Cow::Borrowed("app_run"));
         app.run();
+        println!("finished with run");
     }
     println!("Hello World 2");
+}
+
+use std::convert::{Into};
+use std::borrow::{Cow};
+
+#[derive(Debug)]
+struct DropLoud { s: Cow<'static, str> }
+fn DropLoud<S: Into<Cow<'static, str>>>(s: S) -> DropLoud {
+    let s = s.into();
+    println!("make DropLoud({})", s);
+    DropLoud { s: s.into() }
+}  
+impl Drop for DropLoud {
+    fn drop(&mut self) {
+        println!("drop DropLoud({})", self.s);
+    }
 }
 ```
