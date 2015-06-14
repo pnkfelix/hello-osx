@@ -7,6 +7,9 @@ build = "tango-build.rs"
 [build-dependencies.tango]
 git = "https://github.com/pnkfelix/tango"
 
+[dependencies]
+objc = "0.1"
+
 [dependencies.cocoa]
 git = "https://github.com/servo/cocoa-rs"
 
